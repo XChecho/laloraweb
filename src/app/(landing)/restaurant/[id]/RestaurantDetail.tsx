@@ -1,5 +1,8 @@
+'use client';
+
 import { motion } from "motion/react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from 'next/navigation';
+import Link from "next/link";
 import { Star, MapPin, Clock, Info, Plus, Minus, ArrowRight, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 
@@ -15,7 +18,8 @@ const MENU = {
 };
 
 export default function RestaurantDetail() {
-  const { id } = useParams();
+  const params = useParams<{ id: string }>();
+  const { id } = params;
   const [cartCount, setCartCount] = useState(1);
 
   return (

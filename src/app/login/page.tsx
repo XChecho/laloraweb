@@ -52,7 +52,7 @@ export default function Login() {
                   <input className="h-5 w-5 rounded border-surface-container text-primary focus:ring-primary cursor-pointer" id="terms" name="terms" type="checkbox" />
                   <label className="ml-3 text-sm text-on-surface-variant cursor-pointer" htmlFor="terms">Acepto los términos</label>
                 </div>
-                <Link href="/forgot-password" text-sm className="text-sm text-primary hover:text-primary-container font-bold transition-colors">¿Olvidaste tu contraseña?</Link>
+                <Link href="/forgot-password" className="text-sm text-primary hover:text-primary-container font-bold transition-colors">¿Olvidaste tu contraseña?</Link>
               </div>
 
               <button className="w-full bg-primary text-white font-bold py-4 rounded-full hover:bg-primary-container transition-all shadow-emerald-ambient active:scale-[0.98]" type="submit">
