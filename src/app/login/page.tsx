@@ -1,10 +1,21 @@
 'use client';
 
+import { useState } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { Utensils } from "lucide-react";
+import { Utensils, Loader2 } from "lucide-react";
+import { useLoginMutation } from "@/hooks/useAuth";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const loginMutation = useLoginMutation();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    loginMutation.mutate({ email, password });
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface-container/20">
       <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-2 min-h-screen lg:min-h-[850px] shadow-2xl bg-white overflow-hidden transition-all duration-500">
@@ -24,7 +35,7 @@ export default function Login() {
               <p className="text-on-surface-variant">Inicia sesión para pedir tus platos favoritos.</p>
             </div>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label className="block text-xs font-bold uppercase tracking-widest text-on-surface mb-2" htmlFor="email">Correo Electrónico</label>
                 <input 
@@ -32,7 +43,10 @@ export default function Login() {
                   id="email" 
                   name="email" 
                   placeholder="tu@ejemplo.com" 
-                  type="email" 
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
               </div>
               
@@ -43,7 +57,10 @@ export default function Login() {
                   id="password" 
                   name="password" 
                   placeholder="••••••••" 
-                  type="password" 
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
 
@@ -55,8 +72,31 @@ export default function Login() {
                 <Link href="/forgot-password" className="text-sm text-primary hover:text-primary-container font-bold transition-colors">¿Olvidaste tu contraseña?</Link>
               </div>
 
-              <button className="w-full bg-primary text-white font-bold py-4 rounded-full hover:bg-primary-container transition-all shadow-emerald-ambient active:scale-[0.98]" type="submit">
-                Iniciar Sesión
+              {loginMutation.isError && (
+                <motion.p
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-sm text-red-600 bg-red-50 rounded-lg px-4 py-3"
+                >
+                  {loginMutation.error instanceof Error
+                    ? loginMutation.error.message
+                    : "Error al iniciar sesión"}
+                </motion.p>
+              )}
+
+              <button
+                className="w-full bg-primary text-white font-bold py-4 rounded-full hover:bg-primary-container transition-all shadow-emerald-ambient active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                type="submit"
+                disabled={loginMutation.isPending}
+              >
+                {loginMutation.isPending ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Iniciando sesión...
+                  </>
+                ) : (
+                  "Iniciar Sesión"
+                )}
               </button>
             </form>
 

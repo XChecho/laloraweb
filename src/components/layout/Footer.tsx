@@ -1,4 +1,5 @@
 
+import Image from "next/image";
 import { Share2, Mail, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 
@@ -7,23 +8,25 @@ export default function Footer() {
     <footer className="bg-inverse-surface border-t border-white/5 pt-20 pb-10 text-white">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 text-left">
         <div className="col-span-1 md:col-span-1">
-          <h2 className="text-3xl font-display font-extrabold text-primary mb-6">La Lora</h2>
-          <p className="text-sm opacity-60">© 2024 La Lora. Freshly delivered to your doorstep.</p>
+          <div className="mb-6">
+            <Image src="/images/logo.png" alt="La Lora" width={48} height={48} className="h-10 w-auto" />
+          </div>
+          <p className="text-sm opacity-60">© 2024 La Lora. Entregado fresco a tu puerta.</p>
         </div>
         
         <div>
           <div className="flex flex-col gap-4 text-sm opacity-80">
-            <Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
-            <Link href="/about" className="hover:text-primary transition-colors">Our Story</Link>
+            <Link href="#" className="hover:text-primary transition-colors">Política de Privacidad</Link>
+            <Link href="/terms" className="hover:text-primary transition-colors">Términos de Servicio</Link>
+            <Link href="/about" className="hover:text-primary transition-colors">Nuestra Historia</Link>
           </div>
         </div>
         
         <div>
           <div className="flex flex-col gap-4 text-sm opacity-80">
-            <Link href="/partners" className="hover:text-primary transition-colors">Partner with Us</Link>
-            <Link href="#" className="hover:text-primary transition-colors">Restaurant Login</Link>
-            <Link href="#" className="hover:text-primary transition-colors">Delivery Perks</Link>
+            <Link href="/partners" className="hover:text-primary transition-colors">Sé Nuestro Aliado</Link>
+            <Link href="#" className="hover:text-primary transition-colors">Acceso Restaurantes</Link>
+            <Link href="#" className="hover:text-primary transition-colors">Beneficios de Entrega</Link>
           </div>
         </div>
 

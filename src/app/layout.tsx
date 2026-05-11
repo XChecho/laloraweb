@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "./globals.css";
+import QueryProvider from "@/providers/QueryProvider";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -17,8 +18,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "La Lora — Fresh Food, Delivered Rápido",
-  description: "Experience the vibrant flavors of premium dining, rushed to your door with incredible speed.",
+  title: "La Lora — Comida Fresca, Entrega Rápida",
+  description:
+    "Plataforma integral de gestión para restaurante/bar. Administra órdenes, productos, mesas y más.",
   icons: {
     icon: "/favicon.ico",
   },
@@ -31,8 +33,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className={`${bricolage.variable} ${inter.variable} font-sans bg-background text-on-surface antialiased selection:bg-secondary/30`}>
-        {children}
+      <body
+        className={`${bricolage.variable} ${inter.variable} font-sans bg-background text-on-surface antialiased selection:bg-secondary/30`}
+      >
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );
