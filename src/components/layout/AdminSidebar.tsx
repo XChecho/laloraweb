@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { 
   LayoutDashboard, 
   Table2, 
   Banknote, 
   UtensilsCrossed, 
-  Store, 
   Menu as MenuIcon, 
   Users, 
   Settings,
@@ -23,7 +23,6 @@ export default function AdminSidebar() {
     { name: "Mesas", path: "/admin/tables", icon: Table2 },
     { name: "Caja", path: "/admin/cashier", icon: Banknote },
     { name: "Cocina", path: "/admin/kitchen", icon: UtensilsCrossed },
-    { name: "Restaurantes", path: "/admin/restaurants", icon: Store },
     { name: "Menús", path: "/admin/menu", icon: MenuIcon },
     { name: "Usuarios", path: "/admin/users", icon: Users },
   ];
@@ -61,7 +60,10 @@ export default function AdminSidebar() {
         <button className="flex items-center justify-center gap-2 w-full bg-secondary-container text-white py-3 rounded-xl font-bold text-sm shadow-md hover:scale-[1.02] active:scale-95 transition-all">
           <Plus size={18} /> Nueva Orden
         </button>
-        <button className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-error hover:bg-error/10 transition-all">
+        <button
+          onClick={() => signOut({ callbackUrl: "/login" })}
+          className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm text-error hover:bg-error/10 transition-all"
+        >
           <LogOut size={20} /> Salir
         </button>
       </div>

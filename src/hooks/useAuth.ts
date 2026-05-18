@@ -1,36 +1,45 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
-import { setToken, setRefreshToken } from "@/lib/auth";
 import { useAuthStore } from "@/store/useAuthStore";
-import type { LoginDto, AuthResponse, UserProfile } from "@/types/auth";
+import type { LoginDto, UserProfile } from "@/types/auth";
 
 export function useLoginMutation() {
   const router = useRouter();
-  const setUser = useAuthStore((s) => s.setUser);
-  const storeSetToken = useAuthStore((s) => s.setToken);
 
   return useMutation({
-    mutationFn: (dto: LoginDto) =>
-      api.post<AuthResponse>(
-        "/auth/login",
-        dto as unknown as Record<string, unknown>,
-      ),
-    onSuccess: (data) => {
-      setToken(data.access_token);
-      setRefreshToken(data.refresh_token);
-      storeSetToken(data.access_token);
-
-      setUser({
-        id: "",
-        email: "",
-        firstName: data.firstName,
-        lastName: data.lastName,
-        role: data.userType,
-        companyId: "",
-        active: true,
+    mutationFn: async (dto: LoginDto) => {
+      const result = await signIn('credentials', {
+        email: dto.email,
+        password: dto.password,
+        redirect: false,
       });
 
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+
+      return result;
+    },
+    onSuccess: () => {
+      router.push("/admin/");
+    },
+  });
+}
+
+export function useGoogleLogin() {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: async () => {
+      const result = await signIn('google', { redirect: false });
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+      return result;
+    },
+    onSuccess: () => {
       router.push("/admin/");
     },
   });
@@ -41,7 +50,9 @@ export function useLogoutMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => api.post("/auth/logout"),
+    mutationFn: async () => {
+      await signOut({ redirect: false });
+    },
     onSettled: () => {
       queryClient.clear();
       logout();
@@ -50,17 +61,17 @@ export function useLogoutMutation() {
 }
 
 export function useProfileQuery() {
-  const token = useAuthStore((s) => s.token);
+  const { data: session } = useSession();
   const setUser = useAuthStore((s) => s.setUser);
 
   return useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
-      const data = await api.get<UserProfile>("/auth/profile");
+      const data = await api.get<UserProfile>("/auth/profile", session?.accessToken);
       setUser(data);
       return data;
     },
-    enabled: !!token,
+    enabled: !!session?.accessToken,
     staleTime: 1000 * 60 * 5,
     retry: 1,
   });

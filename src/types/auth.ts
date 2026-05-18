@@ -33,3 +33,28 @@ export interface ApiErrorResponse {
   statusCode: number;
   errors?: string[];
 }
+
+import "next-auth"
+
+declare module "next-auth" {
+  interface Session {
+    accessToken: string;
+    refreshToken: string;
+    user: {
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+      role: string;
+      firstName: string;
+      lastName: string;
+    };
+  }
+
+  interface User {
+    accessToken: string;
+    refreshToken: string;
+    role: string;
+    firstName: string;
+    lastName: string;
+  }
+}

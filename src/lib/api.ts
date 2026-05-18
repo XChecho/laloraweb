@@ -17,19 +17,20 @@ async function request<T>(
   method: string,
   path: string,
   body?: Record<string, unknown>,
+  token?: string | null,
 ): Promise<T> {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!baseUrl) {
     throw new Error("NEXT_PUBLIC_API_URL is not defined");
   }
 
-  const token = getToken();
+  const authToken = token || getToken();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
 
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
+  if (authToken) {
+    headers["Authorization"] = `Bearer ${authToken}`;
   }
 
   const config: RequestInit = {
@@ -62,17 +63,17 @@ async function request<T>(
 }
 
 export const api = {
-  get<T>(path: string): Promise<T> {
-    return request<T>("GET", path);
+  get<T>(path: string, token?: string): Promise<T> {
+    return request<T>("GET", path, undefined, token);
   },
-  post<T>(path: string, body?: Record<string, unknown>): Promise<T> {
-    return request<T>("POST", path, body);
+  post<T>(path: string, body?: Record<string, unknown>, token?: string): Promise<T> {
+    return request<T>("POST", path, body, token);
   },
-  put<T>(path: string, body?: Record<string, unknown>): Promise<T> {
-    return request<T>("PUT", path, body);
+  put<T>(path: string, body?: Record<string, unknown>, token?: string): Promise<T> {
+    return request<T>("PUT", path, body, token);
   },
-  delete<T>(path: string): Promise<T> {
-    return request<T>("DELETE", path);
+  delete<T>(path: string, token?: string): Promise<T> {
+    return request<T>("DELETE", path, undefined, token);
   },
 };
 
